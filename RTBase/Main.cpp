@@ -79,8 +79,6 @@ int main(int argc, char* argv[])
 	//std::string sceneName = "Assets/MaterialsScene";
 	//std::string sceneName = "Assets/kitchen";
 	//std::string sceneName = "Assets/bathroom";
-	//std::string sceneName = "Assets/living-room-2";
-	//std::string sceneName = "Assets/bedroom";
 	std::string filename = "GI.hdr";
 	unsigned int SPP = 128;
 	RayTracer::RenderMode renderMode = RayTracer::RenderMode::PathTrace;
