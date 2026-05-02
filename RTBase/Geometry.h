@@ -287,6 +287,7 @@ public:
 	void traverse(const Ray& ray, const std::vector<Triangle>& triangles, IntersectionData& intersection)
 	{
 		float boxT;
+		// Prune misses and farther boxes.
 		if (!bounds.rayAABB(ray, boxT)) return;
 		if (boxT > intersection.t) return;
 
@@ -319,6 +320,7 @@ public:
 	bool traverseVisible(const Ray& ray, const std::vector<Triangle>& triangles, const float maxT)
 	{
 		float boxT;
+		// No blocker in this box.
 		if (!bounds.rayAABB(ray, boxT))
 			return true;
 
@@ -346,6 +348,7 @@ public:
 		return true;
 	}
 private:
+	// Binned SAH data.
 	struct Bin {
 		AABB bounds;
 		int count;
@@ -361,6 +364,7 @@ private:
 		return v.z;
 	}
 	static int getBinIndex(const Triangle& tri, int axis, const AABB& centroidBounds) {
+		// Centroid to bin.
 		float c = getAxisStepSize(tri.centre(), axis);
 		float minC = getAxisStepSize(centroidBounds.min, axis);
 		float maxC = getAxisStepSize(centroidBounds.max, axis);
@@ -387,6 +391,7 @@ private:
 		return mid - (inputTriangles.begin() + start);
 	}
 	void buildRecursive(std::vector<Triangle>& inputTriangles, int start, int count) {
+		// Start as a leaf.
 		_start = start;
 		_count = count;
 
@@ -399,6 +404,7 @@ private:
 			bounds.extend(inputTriangles[i].bounds());
 		}
 
+		// Small leaf.
 		if (count <= MAXNODE_TRIANGLES) {
 			return;
 		}
@@ -424,6 +430,7 @@ private:
 
 		float leafCost = TRIANGLE_COST * count;
 
+		// Find cheapest SAH split.
 		float bestCost = FLT_MAX;
 		int bestAxis = -1;
 		int bestSplit = -1;
@@ -446,6 +453,7 @@ private:
 				bins[binIndex].bounds.extend(inputTriangles[i].bounds());
 			}
 
+			// Prefix and suffix bounds.
 			AABB leftBounds[BUILD_BINS - 1];
 			AABB rightBounds[BUILD_BINS - 1];
 
@@ -493,6 +501,7 @@ private:
 				float leftArea = leftBounds[split].area();
 				float rightArea = rightBounds[split].area();
 
+				// SAH split cost.
 				float leftCost = (leftArea / parentArea) * leftCount[split];
 				float rightCost = (rightArea / parentArea) * rightCount[split];
 				float cost = TRAVERSE_COST + TRIANGLE_COST * (leftCost + rightCost);
@@ -509,6 +518,7 @@ private:
 			return;
 		}
 
+		// Commit split.
 		int leftCountFinal = divideTrianglesByBin(inputTriangles, start, count, bestAxis, bestSplit, centroidBounds);
 		int rightCountFinal = count - leftCountFinal;
 
