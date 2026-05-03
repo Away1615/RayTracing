@@ -34,9 +34,7 @@ public:
 	MTRandom *samplers;
 	std::thread **threads;
 	int numProcs;
-	//RenderMode renderMode = RenderMode::InstantRadiosity;
 	RenderMode renderMode = RenderMode::PathTrace;
-	//RenderMode renderMode = RenderMode::LightTrace;
 	float fireflyClamp = 10.0f;
 	std::vector<Colour> albedoBuffer;
 	std::vector<Colour> normalBuffer;
@@ -842,12 +840,12 @@ public:
 	}
 	void saveFinalOutputs(std::string& baseName) {
 		std::vector<Colour> noisyPixels = currentImagePixels();
-		saveHDRFromPixels(baseName + ".hdr", noisyPixels);
+		//saveHDRFromPixels(baseName + ".hdr", noisyPixels);
 		savePNGFromPixels(baseName + ".png", noisyPixels);
 
 		std::vector<Colour> denoisedPixels;
 		if (denoise(denoisedPixels)) {
-			saveHDRFromPixels(baseName + "-denoised.hdr", denoisedPixels);
+			//saveHDRFromPixels(baseName + "-denoised.hdr", denoisedPixels);
 			savePNGFromPixels(baseName + "-denoised.png", denoisedPixels);
 		}
 	}

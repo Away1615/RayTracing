@@ -75,10 +75,9 @@ int main(int argc, char* argv[])
 	// runTests();
 
 	// Initialize default parameters
-	//std::string sceneName = "Assets/cornell-box";
-	std::string sceneName = "Assets/MaterialsScene";
+	std::string sceneName = "Assets/cornell-box";
+	//std::string sceneName = "Assets/MaterialsScene";
 	//std::string sceneName = "Assets/kitchen";
-	//std::string sceneName = "Assets/bathroom";
 	//std::string sceneName = "Assets/coffee";
 	//std::string sceneName = "Assets/veach-mis";
 	std::string filename = "GI.hdr";
@@ -139,6 +138,7 @@ int main(int argc, char* argv[])
 	rt.setRenderMode(renderMode);
 	bool running = true;
 	GamesEngineeringBase::Timer timer;
+	clock_t start = clock();
 	while (running)
 	{
 		canvas.checkInput();
@@ -194,17 +194,23 @@ int main(int argc, char* argv[])
 			std::string ldrFilename = filename.substr(0, pos) + "-" + std::to_string(rt.getSPP()) + ".png";
 			rt.savePNG(ldrFilename);
 		}
-		//if (rt.getSPP() == 8 || rt.getSPP() == 16 || rt.getSPP() == 32 || rt.getSPP() == 64 || rt.getSPP() == 128) {
+		//if (rt.getSPP() == 8 || rt.getSPP() == 16 || rt.getSPP() == 32 || rt.getSPP() == 64 || rt.getSPP() == 128 || rt.getSPP() == 256) {
 		//	std::string baseName = outputBaseName(sceneName, rt.getSPP(), renderMode);
 		//	std::cout << "Saving " << baseName << " outputs..." << std::endl;
 		//	rt.saveFinalOutputs(baseName);
+
+		//	if (SPP == rt.getSPP()) {
+		//		std::cout << "Done." << std::endl;
+		//		break;
+		//	}
 		//}
-		if (SPP == rt.getSPP())
-		{
-			std::string baseName = outputBaseName(sceneName, SPP, renderMode);
+
+		if (SPP == rt.getSPP()) {
+			clock_t end = clock();
+			std::string baseName = outputBaseName(sceneName, rt.getSPP(), renderMode);
 			std::cout << "Saving " << baseName << " outputs..." << std::endl;
 			rt.saveFinalOutputs(baseName);
-			std::cout << "Done." << std::endl;
+			std::cout << "Done." << (double)(end - start) / CLOCKS_PER_SEC << std::endl;
 			break;
 		}
 		canvas.present();
