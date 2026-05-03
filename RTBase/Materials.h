@@ -36,26 +36,26 @@ class ShadingHelper
 public:
 	static float fresnelDielectric(float cosTheta, float iorInt, float iorExt) {
 		cosTheta = std::min(std::max(cosTheta, -1.0f), 1.0f);
-		float n = iorExt / iorInt;
-		// n depends on direction
+		float eta = iorExt / iorInt;
+		// eta depends on direction
 		if (cosTheta < 0.0f) {
-			n = 1.0f / n;
+			eta = 1.0f / eta;
 			cosTheta = -cosTheta;
 		}
 
 		// Rewrite Snell's Law
 		float sinTheta = sqrtf(std::max(0.0f, 1.0f - cosTheta * cosTheta));
-		float sinThtoIOR = n * sinTheta;
+		float sinThetaT = eta * sinTheta;
 
-		if (sinThtoIOR >= 1.0f) return 1.0f;
+		if (sinThetaT >= 1.0f) return 1.0f;
 
 		// Calculate thtoIOR
-		float cosThtoIOR = sqrtf(1.0f - sinThtoIOR * sinThtoIOR);
+		float cosThetaT = sqrtf(1.0f - sinThetaT * sinThetaT);
 
 		// Parallel
-		float parallel = (cosTheta - n * cosThtoIOR) / (cosTheta + n * cosThtoIOR);
+		float parallel = (cosTheta - eta * cosThetaT) / (cosTheta + eta * cosThetaT);
 		// Perpendicular
-		float perpendicular = (n * cosTheta - cosThtoIOR) / (n * cosTheta + cosThtoIOR);
+		float perpendicular = (eta * cosTheta - cosThetaT) / (eta * cosTheta + cosThetaT);
 
 		// Average
 		return (parallel * parallel + perpendicular * perpendicular) * 0.5f;
@@ -383,12 +383,12 @@ public:
 		float etaFrom = entering ? extIOR : intIOR;
 		float etaTo = entering ? intIOR : extIOR;
 
-		float n = etaFrom / etaTo;
+		float eta = etaFrom / etaTo;
 		float cosThetaI = fabsf(woLocal.z);
 		float cosThetaISq = cosThetaI * cosThetaI;
 		float sinThetaISq = 1 - cosThetaISq;
 		float sinThetaI = std::sqrt(sinThetaISq);
-		float sinThetaT = n * sinThetaI;
+		float sinThetaT = eta * sinThetaI;
 
 		// All internal reflection
 		if (sinThetaT >= 1.0f) {
@@ -416,7 +416,7 @@ public:
 		float zSign = woLocal.z > 0.0f ? -1.0f : 1.0f;
 		float scale = (extIOR / intIOR) * (extIOR * intIOR);
 		reflectedColour = Le * (1.0f - F) * scale / cosThetaT;
-		Vec3 wtLocal = Vec3(-n * woLocal.x, -n * woLocal.y, zSign * cosThetaT);
+		Vec3 wtLocal = Vec3(-eta * woLocal.x, -eta * woLocal.y, zSign * cosThetaT);
 
 		return shadingData.frame.toWorld(wtLocal);
 	}

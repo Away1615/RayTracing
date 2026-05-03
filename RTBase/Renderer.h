@@ -114,8 +114,8 @@ public:
 	}
 
 	void generateVPLs() {
-		const int numVPLPaths = 256;
-		const int maxVPLDepth = 4;
+		int numVPLPaths = 256;
+		int maxVPLDepth = 4;
 		MTRandom lightSampler(film->SPP + 1);
 
 		vpls.clear();
@@ -325,11 +325,11 @@ public:
 
 			float pdfArea = 1.0f / hitTriangle->area;
 			Vec3 lightNormal = hitTriangle->gNormal();
-			float dist2 = (shadingData.x - prevShadingData.x).lengthSq();
+			float distSq = (shadingData.x - prevShadingData.x).lengthSq();
 			float cosThetaPrime = std::max(Dot(-wi, lightNormal), 0.0f);
 			if (cosThetaPrime <= 0.0f) return 0.0f;
 
-			float pdfW = pdfArea * dist2 / cosThetaPrime;
+			float pdfW = pdfArea * distSq / cosThetaPrime;
 			return pdfW * lightPmf;
 		}
 
@@ -456,10 +456,10 @@ public:
 		if (!scene->camera.projectOntoCamera(position, px, py)) return;
 
 		Vec3 toCamera = scene->camera.origin - position;
-		float dist2 = toCamera.lengthSq();
-		if (dist2 <= EPSILON) return;
+		float distSq = toCamera.lengthSq();
+		if (distSq <= EPSILON) return;
 
-		float dist = sqrtf(dist2);
+		float dist = sqrtf(distSq);
 		Vec3 wi = toCamera / dist;
 		float cosSurface = Dot(normal, wi);
 		if (cosSurface <= 0.0f) return;
@@ -470,7 +470,7 @@ public:
 		if (!scene->visible(position, scene->camera.origin)) return;
 
 		// Camera connection weight
-		float G = cosSurface * cosCamera / dist2;
+		float G = cosSurface * cosCamera / distSq;
 		float We = 1.0f / (scene->camera.Afilm * SQ(SQ(cosCamera)));
 		Colour contribution = clampSample(throughput * G * We);
 		// Splat light contribution
@@ -478,7 +478,7 @@ public:
 	}
 
 	void lightTracePath(Ray& r, Colour pathThroughput, Colour Le, Sampler* sampler, int depth) {
-		const int maxDepth = 8;
+		int maxDepth = 8;
 		// Advance light subpath
 		IntersectionData intersection = scene->traverse(r);
 		ShadingData shadingData = scene->calculateShadingData(intersection, r);
@@ -650,10 +650,10 @@ public:
 		}
 
 		std::atomic<int> nextTile(0);
-		const int tileSize = 16;
-		const int tilesX = (film->width + tileSize - 1) / tileSize;
-		const int tilesY = (film->height + tileSize - 1) / tileSize;
-		const int totalTiles = tilesX * tilesY;
+		int tileSize = 16;
+		int tilesX = (film->width + tileSize - 1) / tileSize;
+		int tilesY = (film->height + tileSize - 1) / tileSize;
+		int totalTiles = tilesX * tilesY;
 
 		for (int i = 0; i < numProcs; i++) {
 			threads[i] = new std::thread([this, i, &nextTile, tileSize, tilesX, tilesY, totalTiles]() {

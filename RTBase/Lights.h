@@ -169,8 +169,8 @@ public:
 		// Sample a pixel from CDFs
 		int width = env->width;
 		int height = env->height;
-		float xi = sampler->next() * weightSum;
-		int idx = std::upper_bound(cdf.begin(), cdf.end(), xi) - cdf.begin();
+		float r = sampler->next() * weightSum;
+		int idx = std::upper_bound(cdf.begin(), cdf.end(), r) - cdf.begin();
 
 		if (idx >= width * height) {
 			idx = width * height - 1;
@@ -325,7 +325,7 @@ public:
 		//float pixelArea = 1 / (width * height);
 		//float pdfUV = pixelPmf / pixelArea;
 		float pixelPmf = pixelWeight / weightSum;
-		float pdfUV = pixelPmf * float(width * height);
+		float pdfUV = pixelPmf * width * height;
 
 		return pdfUV / (2.0f * M_PI * M_PI * sinTheta);
 	}

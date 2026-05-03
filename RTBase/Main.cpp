@@ -75,10 +75,10 @@ int main(int argc, char* argv[])
 	// runTests();
 
 	// Initialize default parameters
-	std::string sceneName = "Assets/cornell-box";
+	//std::string sceneName = "Assets/cornell-box";
 	//std::string sceneName = "Assets/MaterialsScene";
 	//std::string sceneName = "Assets/kitchen";
-	//std::string sceneName = "Assets/bathroom";
+	std::string sceneName = "Assets/bathroom";
 	std::string filename = "GI.hdr";
 	unsigned int SPP = 128;
 	RayTracer::RenderMode renderMode = RayTracer::RenderMode::PathTrace;
@@ -130,7 +130,6 @@ int main(int argc, char* argv[])
 		}
 	}
 	Scene* scene = loadScene(sceneName);
-	scene->build();
 	GamesEngineeringBase::Window canvas;
 	canvas.create((unsigned int)scene->camera.width, (unsigned int)scene->camera.height, "Tracer", false);
 	RayTracer rt;
