@@ -76,9 +76,11 @@ int main(int argc, char* argv[])
 
 	// Initialize default parameters
 	//std::string sceneName = "Assets/cornell-box";
-	//std::string sceneName = "Assets/MaterialsScene";
+	std::string sceneName = "Assets/MaterialsScene";
 	//std::string sceneName = "Assets/kitchen";
-	std::string sceneName = "Assets/bathroom";
+	//std::string sceneName = "Assets/bathroom";
+	//std::string sceneName = "Assets/coffee";
+	//std::string sceneName = "Assets/veach-mis";
 	std::string filename = "GI.hdr";
 	unsigned int SPP = 128;
 	RayTracer::RenderMode renderMode = RayTracer::RenderMode::PathTrace;
