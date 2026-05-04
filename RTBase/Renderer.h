@@ -87,16 +87,12 @@ public:
 	}
 
 	Colour clampSample(Colour colour) {
-		if (!std::isfinite(colour.r) || !std::isfinite(colour.g) || !std::isfinite(colour.b)) {
-			return Colour(0.0f, 0.0f, 0.0f);
-		}
-
 		colour.r = std::max(colour.r, 0.0f);
 		colour.g = std::max(colour.g, 0.0f);
 		colour.b = std::max(colour.b, 0.0f);
 
 		float lum = colour.Lum();
-		if (!std::isfinite(lum) || lum <= 0.0f || fireflyClamp <= 0.0f) {
+		if (lum <= 0.0f) {
 			return colour;
 		}
 

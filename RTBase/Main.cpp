@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
 	// runTests();
 
 	// Initialize default parameters
-	std::string sceneName = "Assets/cornell-box";
-	//std::string sceneName = "Assets/MaterialsScene";
+	//std::string sceneName = "Assets/cornell-box";
+	std::string sceneName = "Assets/MaterialsScene";
 	//std::string sceneName = "Assets/kitchen";
 	//std::string sceneName = "Assets/coffee";
 	//std::string sceneName = "Assets/veach-mis";
